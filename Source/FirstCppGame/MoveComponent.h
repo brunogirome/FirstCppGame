@@ -6,6 +6,8 @@
 #include "Components/SceneComponent.h"
 #include "MoveComponent.generated.h"
 
+UDELEGATE(BlueprintAuthorityOnly)
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnMoveComponentReachEndPointSignature, bool, IsTopEndPoint);
 
 UCLASS( ClassGroup=(FirstCppProject), meta=(BlueprintSpawnableComponent) )
 class FIRSTCPPGAME_API UMoveComponent : public USceneComponent
@@ -15,6 +17,18 @@ class FIRSTCPPGAME_API UMoveComponent : public USceneComponent
 public:	
 	// Sets default values for this component's properties
 	UMoveComponent();
+
+	UFUNCTION(BlueprintCallable)
+	void EnableMovement(bool ShouldMove);
+
+	UFUNCTION(BlueprintCallable)
+	void SwitchMovement();
+
+	UFUNCTION(BlueprintCallable)
+	void BackToOriginalPosition();
+
+	UFUNCTION(BlueprintCallable)
+	void SetMoveDirection(int direction);
 
 protected:
 	// Called when the game starts
@@ -32,6 +46,12 @@ private:
 	 
 	UPROPERTY(EditAnywhere)
 	float speed = 1.f;
+
+	UPROPERTY(EditAnywhere)
+	bool canItMove = true;
+
+	UPROPERTY(BlueprintAssignable)
+	FOnMoveComponentReachEndPointSignature OnEndpointReached;
 
 	FVector StartRelativeLocation;
 	FVector MoveOffsetNormalize;
